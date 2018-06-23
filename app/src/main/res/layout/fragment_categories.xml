@@ -32,4 +32,15 @@
         android:text="@string/no_internet_connection_text_view_text"
         android:gravity="center"/>
 
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/categories_article_no_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:textSize="@dimen/categories_no_data_text_size"
+        android:textColor="@color/colorSecondaryText"
+        android:text="@string/no_data_text"
+        android:gravity="center"
+        android:visibility="gone"/>
+
 </RelativeLayout>

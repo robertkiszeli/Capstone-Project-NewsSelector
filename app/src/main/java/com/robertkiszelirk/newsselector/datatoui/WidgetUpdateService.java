@@ -1,22 +1,18 @@
 package com.robertkiszelirk.newsselector.datatoui;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.robertkiszelirk.newsselector.R;
 import com.robertkiszelirk.newsselector.data.getdata.DownloadArticlesTopHeadlines;
 import com.robertkiszelirk.newsselector.data.model.Article;
-import com.robertkiszelirk.newsselector.ui.activity.NewsSelectorActivity;
 
 import java.util.ArrayList;
 
@@ -54,6 +50,19 @@ public class WidgetUpdateService extends RemoteViewsService{
                         sharedPreferences.getString(context.getResources().getString(R.string.shared_pref_country_id),"us"),
                         "general")
                                 .loadInBackground();
+                if(articleArrayList == null){
+                    articleArrayList = new ArrayList<>();
+                    articleArrayList.add(new Article(
+                            null,
+                            context.getResources().getString(R.string.no_data_text),
+                            null,
+                            context.getResources().getString(R.string.no_data_text),
+                            null,
+                            null,
+                            null,
+                            null
+                    ));
+                }
             }
          }
 

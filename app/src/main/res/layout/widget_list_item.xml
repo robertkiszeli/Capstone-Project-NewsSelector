@@ -9,6 +9,7 @@
     android:background="@color/colorPrimaryText">
 
     <ImageView
+        android:contentDescription="@string/widget_article_list_image_content_description"
         android:id="@+id/widget_article_image"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -17,6 +18,7 @@
         android:layout_margin="@dimen/widget_list_item_article_image_margin"/>
 
     <LinearLayout
+        android:id="@+id/widget_article_text"
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="match_parent"

@@ -31,7 +31,11 @@ public class DownloadArticlesSearch extends AsyncTaskLoader<ArrayList<Article>> 
         String jsonData = GetJsonData.getJson(HandleUrls.createSearchListUrl(searchText, language));
 
         try {
-            articleList = ParseJsonData.jsonParseForArticlesList(jsonData);
+            if(jsonData != null) {
+                articleList = ParseJsonData.jsonParseForArticlesList(jsonData);
+            }else{
+                articleList = null;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

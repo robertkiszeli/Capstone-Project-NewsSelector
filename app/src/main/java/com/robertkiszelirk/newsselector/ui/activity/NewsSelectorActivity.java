@@ -28,6 +28,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.robertkiszelirk.newsselector.R;
 import com.robertkiszelirk.newsselector.data.AnalyticsApplication;
+import com.robertkiszelirk.newsselector.data.Constants;
 import com.robertkiszelirk.newsselector.ui.fragment.SaveToReadFragment;
 import com.robertkiszelirk.newsselector.ui.fragment.SearchFragment;
 import com.robertkiszelirk.newsselector.ui.fragment.TopHeadlinesFragment;
@@ -83,13 +84,13 @@ public class NewsSelectorActivity extends AppCompatActivity {
             noInternetConnection.setVisibility(View.GONE);
             fragmentContainer.setVisibility(View.VISIBLE);
             // Handle start from widget
-            if(getIntent().getExtras() != null && getIntent().getExtras().getString("articleUrl") != null){
+            if(getIntent().getExtras() != null && getIntent().getExtras().getString(Constants.ARTICLE_URL) != null){
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                 CustomTabsIntent customTabsIntent = builder.build();
                 builder.setToolbarColor(getResources().getColor(R.color.colorPrimary));
                 builder.setShowTitle(true);
                 builder.setCloseButtonIcon(BitmapFactory.decodeResource(getResources(), R.drawable.arrow_back_white_24dp));
-                customTabsIntent.launchUrl(this, Uri.parse(getIntent().getExtras().getString("articleUrl")));
+                customTabsIntent.launchUrl(this, Uri.parse(getIntent().getExtras().getString(Constants.ARTICLE_URL)));
             }
             // Handle configuration change
             if (savedInstanceState == null) {
@@ -98,8 +99,8 @@ public class NewsSelectorActivity extends AppCompatActivity {
             } else {
 
                 tracker.send(new HitBuilders.EventBuilder()
-                        .setCategory("Action")
-                        .setAction("Share")
+                        .setCategory(Constants.TRACKER_CATEGORY)
+                        .setAction(Constants.TRACKER_ACTION)
                         .build());
 
                 refreshView = false;
@@ -176,7 +177,7 @@ public class NewsSelectorActivity extends AppCompatActivity {
                                 sharedPrefEditor.apply();
                                 // Update widget
                                 Intent intent = new Intent(getApplicationContext(), NewsSelectorWidget.class);
-                                intent.setAction("refresh");
+                                intent.setAction(Constants.WIDGET_REFRESH);
                                 sendBroadcast(intent);
                                 if(checkInternetConnection()) {
                                     // Change fragment

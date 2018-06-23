@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'developer'
             keyPassword 'developer'
-            storeFile file('/home/kiszeli/Udacity Developer /NewSelector_Assets/key store/newsselectorkey.jks')
+            storeFile file('newsselectorkeystore.jks')
             storePassword 'selector'
         }
     }

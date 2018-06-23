@@ -12,7 +12,7 @@
     <string name="navigation_drawer_search_text">Search</string>
     <string name="navigation_drawer_save_to_read_text">Save to read</string>
     <string name="article_save_image_button_content_description">Save or delete article from save to latter read list.</string>
-    <string name="article_card_view_article_image_content_description">Clickable image of the article.</string>
+    <string name="article_card_view_article_image_content_description">Image of the article.</string>
     <string name="save_to_read_title">Saved for reed</string>
     <string name="search_article_title">Search Article</string>
     <string name="top_headlines_title">Top Headlines -\u0020</string>
@@ -44,6 +44,8 @@
     <string name="shared_pref_country_id_default_value">us</string>
     <string name="widget_title_text_news">News</string>
     <string name="widget_title_default_title">General News</string>
+    <string name="no_data_text">No data available</string>
+    <string name="widget_article_list_image_content_description">Image of the article</string>
 
     <!-- Final Values Don't Change -->
     <string-array name="countries">

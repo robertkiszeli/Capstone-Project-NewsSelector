@@ -15,10 +15,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.robertkiszelirk.newsselector.R;
+import com.robertkiszelirk.newsselector.data.Constants;
 import com.robertkiszelirk.newsselector.data.getdata.DownloadArticlesTopHeadlines;
 import com.robertkiszelirk.newsselector.data.model.Article;
 import com.robertkiszelirk.newsselector.datatoui.ArticlesToRecyclerView;
@@ -30,6 +32,8 @@ public class CategoriesFragment extends Fragment
 
     private RecyclerView articlesRecyclerView;
 
+    private TextView noDataText;
+
     private ArrayList<Article> articleArrayList;
 
     public CategoriesFragment(){}
@@ -40,8 +44,8 @@ public class CategoriesFragment extends Fragment
         CategoriesFragment categoriesFragment = new CategoriesFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putString("country",country);
-        bundle.putString("category",category);
+        bundle.putString(Constants.ARTICLE_COUNTRY,country);
+        bundle.putString(Constants.ARTICLE_CATEGORY,category);
 
         categoriesFragment.setArguments(bundle);
 
@@ -57,6 +61,8 @@ public class CategoriesFragment extends Fragment
 
         articlesRecyclerView = categoriesView.findViewById(R.id.categories_article_recycler_view);
 
+        noDataText = categoriesView.findViewById(R.id.categories_article_no_data);
+
         AppCompatTextView articleNoInternetConnection = categoriesView.findViewById(R.id.categories_article_no_internet_connection);
 
         if(checkInternetConnection()) {
@@ -65,7 +71,7 @@ public class CategoriesFragment extends Fragment
             // Handle configuration change
             if (savedInstanceState != null) {
 
-                articleArrayList = savedInstanceState.getParcelableArrayList("articleList");
+                articleArrayList = savedInstanceState.getParcelableArrayList(Constants.ARTICLE_LIST);
 
                 if(articleArrayList != null) {
                     ArticlesToRecyclerView.LoadArticlesListToRecyclerView(
@@ -112,11 +118,11 @@ public class CategoriesFragment extends Fragment
         String category;
 
         if(getArguments() != null){
-            country = getArguments().getString("country");
-            category = getArguments().getString("category");
+            country = getArguments().getString(Constants.ARTICLE_COUNTRY);
+            category = getArguments().getString(Constants.ARTICLE_CATEGORY);
         }else{
-            country = "United States";
-            category = "general";
+            country = Constants.ARTICLE_BASE_COUNTRY;
+            category = Constants.ARTICLE_BASE_CATEGORY;
         }
         return new DownloadArticlesTopHeadlines(getContext(),country,category);
     }
@@ -124,16 +130,21 @@ public class CategoriesFragment extends Fragment
     @Override
     public void onLoadFinished(@NonNull Loader<ArrayList<Article>> loader, ArrayList<Article> data) {
 
-        articleArrayList = data;
-
         TopHeadlinesFragment.swipeProgressGone();
 
-        ArticlesToRecyclerView.LoadArticlesListToRecyclerView(
-                false,
-                data,
-                articlesRecyclerView,
-                getContext());
-
+        if(data != null) {
+            articlesRecyclerView.setVisibility(View.VISIBLE);
+            noDataText.setVisibility(View.GONE);
+            articleArrayList = data;
+            ArticlesToRecyclerView.LoadArticlesListToRecyclerView(
+                    false,
+                    data,
+                    articlesRecyclerView,
+                    getContext());
+        }else{
+            articlesRecyclerView.setVisibility(View.GONE);
+            noDataText.setVisibility(View.VISIBLE);
+        }
         getLoaderManager().destroyLoader(0);
     }
 
@@ -145,7 +156,7 @@ public class CategoriesFragment extends Fragment
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
 
-        outState.putParcelableArrayList("articleList",articleArrayList);
+        outState.putParcelableArrayList(Constants.ARTICLE_LIST,articleArrayList);
         super.onSaveInstanceState(outState);
     }
 

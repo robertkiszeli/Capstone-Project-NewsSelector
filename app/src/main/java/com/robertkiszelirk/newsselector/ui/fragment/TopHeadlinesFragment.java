@@ -3,7 +3,6 @@ package com.robertkiszelirk.newsselector.ui.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Path;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,14 +15,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.robertkiszelirk.newsselector.R;
+import com.robertkiszelirk.newsselector.data.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,9 +60,9 @@ public class TopHeadlinesFragment extends Fragment {
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimaryText));
         // Load SharedPreferences data
         if(getActivity() != null) {
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("country", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Constants.ARTICLE_COUNTRY, Context.MODE_PRIVATE);
             // Set toolbar title
-            toolbar.setTitle(getString(R.string.top_headlines_title) + sharedPreferences.getString("country", ""));
+            toolbar.setTitle(getString(R.string.top_headlines_title) + sharedPreferences.getString(Constants.ARTICLE_COUNTRY, ""));
         }else{
             toolbar.setTitle(getString(R.string.top_headlines_title));
         }
@@ -101,8 +98,8 @@ public class TopHeadlinesFragment extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
 
         // Default values
-        String country = "United States";
-        String countryId = "us";
+        String country = Constants.ARTICLE_BASE_COUNTRY;
+        String countryId = Constants.ARTICLE_BASE_COUNTRY_ID;
 
         // Create new viewPager adapter
         ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
@@ -114,8 +111,8 @@ public class TopHeadlinesFragment extends Fragment {
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getContext().getString(R.string.shared_pref_name), Context.MODE_PRIVATE);
 
             // Get mani data from SharedPreferences
-            country = sharedPreferences.getString("country", "United States");
-            countryId = sharedPreferences.getString("countryId", "us");
+            country = sharedPreferences.getString(Constants.ARTICLE_COUNTRY, Constants.ARTICLE_BASE_COUNTRY);
+            countryId = sharedPreferences.getString(Constants.ARTICLE_COUNTRY_ID, Constants.ARTICLE_BASE_COUNTRY_ID);
 
             // Set toolbar title
             toolbar.setTitle(getString(R.string.top_headlines_title) + country);

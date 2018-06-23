@@ -2,6 +2,7 @@ package com.robertkiszelirk.newsselector.data.getdata;
 
 import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
+
 import com.robertkiszelirk.newsselector.data.HandleUrls;
 import com.robertkiszelirk.newsselector.data.ParseJsonData;
 import com.robertkiszelirk.newsselector.data.model.Article;
@@ -28,7 +29,11 @@ public class DownloadArticlesTopHeadlines extends AsyncTaskLoader<ArrayList<Arti
         String jsonData = GetJsonData.getJson(HandleUrls.createTopHeadlinesListUrl(country,category));
 
         try {
-            articleList = ParseJsonData.jsonParseForArticlesList(jsonData);
+            if(jsonData != null) {
+                articleList = ParseJsonData.jsonParseForArticlesList(jsonData);
+            }else{
+                articleList = null;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -28,7 +28,7 @@ public class WidgetGetArticleData extends IntentService{
     private void passArticleArray(ArrayList<Article> articleArrayList) {
 
         Intent intent = new Intent(UPDATE_ARTICLES_LIST);
-        intent.putParcelableArrayListExtra("articleList",articleArrayList);
+        intent.putParcelableArrayListExtra(Constants.ARTICLE_LIST,articleArrayList);
         intent.setAction(UPDATE_ARTICLES_LIST);
         sendBroadcast(intent);
     }

@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.robertkiszelirk.newsselector.R;
+import com.robertkiszelirk.newsselector.data.Constants;
 import com.robertkiszelirk.newsselector.data.getdata.DownloadArticlesSearch;
 import com.robertkiszelirk.newsselector.data.model.Article;
 import com.robertkiszelirk.newsselector.datatoui.ArticlesToRecyclerView;
@@ -46,6 +47,9 @@ public class SearchFragment extends Fragment
 
     @BindView(R.id.search_no_internet_connection)
     AppCompatTextView searchNoInternetConnection;
+
+    @BindView(R.id.search_no_data)
+    AppCompatTextView searchNoData;
 
     @BindView(R.id.search_toolbar)
     Toolbar toolbar;
@@ -95,15 +99,15 @@ public class SearchFragment extends Fragment
 
             sharedPrefEditor = sharedPreferences.edit();
 
-            if (!sharedPreferences.contains("searchLanguage")) {
-                sharedPrefEditor.putString("searchLanguage", "en");
+            if (!sharedPreferences.contains(Constants.ARTICLE_SEARCH_LANGUAGE)) {
+                sharedPrefEditor.putString(Constants.ARTICLE_SEARCH_LANGUAGE, Constants.ARTICLE_BASE_SEARCH_LANGUAGE);
                 sharedPrefEditor.apply();
-                selectedLanguage = "en";
+                selectedLanguage = Constants.ARTICLE_BASE_SEARCH_LANGUAGE;
             } else {
-                selectedLanguage = sharedPreferences.getString("searchLanguage", "en");
+                selectedLanguage = sharedPreferences.getString(Constants.ARTICLE_SEARCH_LANGUAGE, Constants.ARTICLE_BASE_SEARCH_LANGUAGE);
             }
         }else{
-            selectedLanguage = "en";
+            selectedLanguage = Constants.ARTICLE_BASE_SEARCH_LANGUAGE;
         }
 
         // Set spinner to select language
@@ -114,7 +118,7 @@ public class SearchFragment extends Fragment
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedLanguage = getResources().getStringArray(R.array.languages_id)[position];
-                sharedPrefEditor.putString("searchLanguage",selectedLanguage);
+                sharedPrefEditor.putString(Constants.ARTICLE_SEARCH_LANGUAGE,selectedLanguage);
                 sharedPrefEditor.apply();
             }
 
@@ -134,12 +138,13 @@ public class SearchFragment extends Fragment
                 searchRecyclerView.setVisibility(View.VISIBLE);
                 searchNoInternetConnection.setVisibility(View.GONE);
 
-                searchText = savedInstanceState.getString("searchText");
-                articleArrayList = savedInstanceState.getParcelableArrayList("articleList");
+                searchText = savedInstanceState.getString(Constants.ARTICLE_SEARCH_TEXT);
+                articleArrayList = savedInstanceState.getParcelableArrayList(Constants.ARTICLE_LIST);
 
                 if(searchText != null && articleArrayList != null) {
                     toolbar.setTitle(searchText);
-
+                    searchRecyclerView.setVisibility(View.VISIBLE);
+                    searchNoData.setVisibility(View.GONE);
                     // Add data to RecyclerView
                     ArticlesToRecyclerView.LoadArticlesListToRecyclerView(
                             false,
@@ -147,6 +152,9 @@ public class SearchFragment extends Fragment
                             searchRecyclerView,
                             getContext()
                     );
+                }else{
+                    searchRecyclerView.setVisibility(View.GONE);
+                    searchNoData.setVisibility(View.VISIBLE);
                 }
             }else{
                 searchRecyclerView.setVisibility(View.GONE);
@@ -214,15 +222,21 @@ public class SearchFragment extends Fragment
     @Override
     public void onLoadFinished(@NonNull Loader<ArrayList<Article>> loader, ArrayList<Article> data) {
 
-        articleArrayList = data;
-
-        // Add data to RecyclerView
-        ArticlesToRecyclerView.LoadArticlesListToRecyclerView(
-                false,
-                data,
-                searchRecyclerView,
-                getContext()
-        );
+        if(data != null) {
+            searchRecyclerView.setVisibility(View.VISIBLE);
+            searchNoData.setVisibility(View.GONE);
+            articleArrayList = data;
+            // Add data to RecyclerView
+            ArticlesToRecyclerView.LoadArticlesListToRecyclerView(
+                    false,
+                    data,
+                    searchRecyclerView,
+                    getContext()
+            );
+        }else{
+            searchRecyclerView.setVisibility(View.GONE);
+            searchNoData.setVisibility(View.VISIBLE);
+        }
 
         getLoaderManager().destroyLoader(1);
     }
@@ -235,8 +249,8 @@ public class SearchFragment extends Fragment
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
 
-        outState.putString("searchText",searchText);
-        outState.putParcelableArrayList("articleList",articleArrayList);
+        outState.putString(Constants.ARTICLE_SEARCH_TEXT,searchText);
+        outState.putParcelableArrayList(Constants.ARTICLE_LIST,articleArrayList);
         super.onSaveInstanceState(outState);
     }
 
